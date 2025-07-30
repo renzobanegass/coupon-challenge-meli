@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.example.coupon.domain.model.Item;
 import com.example.coupon.domain.model.Result;
 
+@Component
 public class GreedyCouponSolver implements CouponSolverStrategy {
 
     @Override
