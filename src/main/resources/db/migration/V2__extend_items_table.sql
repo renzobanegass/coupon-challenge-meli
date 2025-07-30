@@ -1,0 +1,4 @@
+ALTER TABLE items
+  ADD COLUMN title VARCHAR(255),
+  ADD COLUMN thumbnail TEXT,
+  ADD COLUMN price NUMERIC(10, 2);
