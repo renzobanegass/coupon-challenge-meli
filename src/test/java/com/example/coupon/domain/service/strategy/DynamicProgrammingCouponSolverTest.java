@@ -1,4 +1,4 @@
-package com.example.coupon.domain.service;
+package com.example.coupon.domain.service.strategy;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,12 +8,13 @@ import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 
-import com.example.coupon.domain.service.DynamicProgrammingAlgorithm.Item;
-import com.example.coupon.domain.service.DynamicProgrammingAlgorithm.Result;
+import com.example.coupon.domain.model.Item;
+import com.example.coupon.domain.model.Result;
 
-public class CouponSolverTest {
+
+public class DynamicProgrammingCouponSolverTest {
     
-    private final DynamicProgrammingAlgorithm solver = new DynamicProgrammingAlgorithm();
+    private final DynamicProgrammingCouponSolver solver = new DynamicProgrammingCouponSolver();
 
     @Test
     void selectsOptimalItemsWithinBudget() {

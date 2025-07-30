@@ -5,11 +5,10 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.coupon.domain.model.Item;
+import com.example.coupon.domain.model.Result;
+
 public class DynamicProgrammingAlgorithm {
-    
-    public record Item(String id, BigDecimal price) {}
-    
-    public record Result(List<String> itemIds, BigDecimal total) {}
 
     public Result solve(List<Item> items, BigDecimal amount) {
         int scale = 2;
@@ -18,7 +17,7 @@ public class DynamicProgrammingAlgorithm {
         int n = items.size();
         int[] prices = new int[n];
         for (int i = 0; i < n; i++) {
-            prices[i] = items.get(i).price.multiply(BigDecimal.valueOf(100)).intValue();
+            prices[i] = items.get(i).price().multiply(BigDecimal.valueOf(100)).intValue();
         }
 
         boolean[][] dp = new boolean[n + 1][capacity + 1];
@@ -43,7 +42,7 @@ public class DynamicProgrammingAlgorithm {
         for (int i = n, j = best; i > 0 && j >= 0; i--) {
             int price = prices[i - 1];
             if (j >= price && dp[i - 1][j - price]) {
-                selected.add(items.get(i - 1).id);
+                selected.add(items.get(i - 1).id());
                 j -= price;
             }
         }

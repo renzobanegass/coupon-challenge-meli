@@ -1,8 +1,9 @@
 package com.example.coupon.domain.service.strategy;
 
-import com.example.coupon.domain.service.DynamicProgrammingAlgorithm.Item;
-import com.example.coupon.domain.service.DynamicProgrammingAlgorithm.Result;
 import org.junit.jupiter.api.Test;
+
+import com.example.coupon.domain.model.Item;
+import com.example.coupon.domain.model.Result;
 
 import java.math.BigDecimal;
 import java.util.List;
