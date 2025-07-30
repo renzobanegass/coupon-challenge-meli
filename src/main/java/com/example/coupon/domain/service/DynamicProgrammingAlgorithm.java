@@ -5,7 +5,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CouponSolver {
+public class DynamicProgrammingAlgorithm {
     
     public record Item(String id, BigDecimal price) {}
     

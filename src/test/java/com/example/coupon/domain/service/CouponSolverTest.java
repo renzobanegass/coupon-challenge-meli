@@ -8,12 +8,12 @@ import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 
-import com.example.coupon.domain.service.CouponSolver.Item;
-import com.example.coupon.domain.service.CouponSolver.Result;
+import com.example.coupon.domain.service.DynamicProgrammingAlgorithm.Item;
+import com.example.coupon.domain.service.DynamicProgrammingAlgorithm.Result;
 
 public class CouponSolverTest {
     
-    private final CouponSolver solver = new CouponSolver();
+    private final DynamicProgrammingAlgorithm solver = new DynamicProgrammingAlgorithm();
 
     @Test
     void selectsOptimalItemsWithinBudget() {
