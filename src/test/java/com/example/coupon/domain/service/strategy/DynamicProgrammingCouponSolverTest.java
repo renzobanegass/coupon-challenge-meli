@@ -1,6 +1,8 @@
 package com.example.coupon.domain.service.strategy;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import com.example.coupon.domain.model.Item;
 import com.example.coupon.domain.model.Result;
+import com.example.coupon.domain.service.DynamicProgrammingAlgorithm;
 
 
 public class DynamicProgrammingCouponSolverTest {
@@ -166,5 +169,35 @@ public class DynamicProgrammingCouponSolverTest {
         Result result = solver.solve(items, new BigDecimal("200.00"));
 
         assertThat(result.total()).isLessThanOrEqualTo(new BigDecimal("200.00"));
+    }
+
+    @Test
+    void testLoopTerminationWhenNoValidSubset() {
+        List<Item> items = List.of(
+            new Item("X", new BigDecimal("200.00")),
+            new Item("Y", new BigDecimal("300.00"))
+        );
+        BigDecimal budget = new BigDecimal("100.00");
+
+        Result result = new DynamicProgrammingAlgorithm().solve(items, budget);
+
+        assertEquals(new BigDecimal("0.00"), result.total());
+        assertTrue(result.itemIds().isEmpty());
+    }
+
+    @Test
+    void testLoopExitsWhenJReachesZero() {
+        List<Item> items = List.of(
+            new Item("A", new BigDecimal("10.00")),
+            new Item("B", new BigDecimal("20.00"))
+        );
+        BigDecimal budget = new BigDecimal("30.00");
+
+        Result result = new DynamicProgrammingAlgorithm().solve(items, budget);
+
+        assertEquals(new BigDecimal("30.00"), result.total());
+        assertTrue(result.itemIds().contains("A"));
+        assertTrue(result.itemIds().contains("B"));
+        assertEquals(2, result.itemIds().size());
     }
 }

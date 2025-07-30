@@ -82,4 +82,15 @@ class CouponControllerIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.algorithm").value("dynamic"));
     }
+
+    @Test
+    void returnsBadRequestForInvalidAlgorithm() throws Exception {
+        CouponRequest request = new CouponRequest(List.of("A", "B"), new BigDecimal("30.00"));
+
+        mockMvc.perform(post("/coupon?algo=invalid")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().string("Invalid algorithm: invalid"));
+    }
 }

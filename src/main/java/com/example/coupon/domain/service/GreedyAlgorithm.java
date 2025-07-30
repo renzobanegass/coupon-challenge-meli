@@ -9,7 +9,7 @@ import com.example.coupon.domain.model.Item;
 import com.example.coupon.domain.model.Result;
 
 public class GreedyAlgorithm {
-    public static Result solve(List<Item> items, BigDecimal amount) {
+    public Result solve(List<Item> items, BigDecimal amount) {
         List<Item> sorted = new ArrayList<>(items);
         sorted.sort(Comparator.comparing(Item::price).reversed());
 

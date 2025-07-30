@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 public class CouponServiceImplTest {
@@ -44,14 +46,12 @@ public class CouponServiceImplTest {
     }
 
     @Test
-    void fallsBackToDynamicWhenAlgorithmIsUnknown() {
+    void throwsExceptionWhenAlgorithmIsUnknown() {
         CouponRequest request = new CouponRequest(List.of("A", "B"), new BigDecimal("30.00"));
-        Result result = new Result(List.of("A"), new BigDecimal("10.00"));
-        when(dynamicStrategy.solve(any(), any())).thenReturn(result);
 
-        CouponResponse response = couponService.calculateCoupon(request, "unknown");
-
-        assertThat(response.algorithm()).isEqualTo("dynamic");
+        assertThatThrownBy(() -> couponService.calculateCoupon(request, "unknown"))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessageContaining("Invalid algorithm");
     }
 }
 

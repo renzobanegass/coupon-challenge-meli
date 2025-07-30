@@ -30,10 +30,10 @@ public class CouponServiceImpl implements CouponService {
                 .map(id -> new Item(id, BigDecimal.TEN)) // placeholder price
                 .toList();
 
-        CouponSolverStrategy solver = switch (algorithm) {
+        CouponSolverStrategy solver = switch (algorithm.toLowerCase()) {
             case "greedy" -> strategies.get("greedy");
             case "dp" -> strategies.get("dynamic");
-            default -> strategies.get("dynamic"); //default to DP
+            default -> throw new IllegalArgumentException("Invalid algorithm: " + algorithm);
         };
 
         Result result = solver.solve(items, request.amount());
