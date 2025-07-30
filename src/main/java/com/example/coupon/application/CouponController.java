@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.coupon.domain.model.CouponRequest;
 import com.example.coupon.domain.model.CouponResponse;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/coupon")
 public class CouponController {
@@ -21,7 +23,7 @@ public class CouponController {
     }
 
     @PostMapping
-    public ResponseEntity<CouponResponse> optimizeCoupon(@RequestBody CouponRequest request,
+    public ResponseEntity<CouponResponse> optimizeCoupon(@Valid @RequestBody CouponRequest request,
                                                          @RequestParam(defaultValue = "dp") String algo) {
         CouponResponse response = couponService.calculateCoupon(request, algo);
         return ResponseEntity.ok(response);
