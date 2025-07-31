@@ -9,8 +9,6 @@ import com.example.coupon.infrastructure.persistence.entity.UserEntity;
 import com.example.coupon.infrastructure.persistence.repository.UserRepository;
 import com.github.javafaker.Faker;
 
-import jakarta.annotation.PostConstruct;
-
 @Component
 public class UserSeeder {
     private final UserRepository userRepository;
@@ -20,14 +18,13 @@ public class UserSeeder {
         this.userRepository = userRepository;
     }
 
-    @PostConstruct
     public void seed() {
         if (userRepository.count() > 0) return;
 
         List<UserEntity> users = IntStream.range(0, 10)
             .mapToObj(i -> {
                 UserEntity user = new UserEntity();
-                user.setUsername(faker.name().fullName());
+                user.setNickname(faker.name().fullName());
                 return user;
             }).toList();
 
