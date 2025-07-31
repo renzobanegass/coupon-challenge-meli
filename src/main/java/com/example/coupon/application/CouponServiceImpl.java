@@ -11,6 +11,7 @@ import com.example.coupon.domain.model.CouponRequest;
 import com.example.coupon.domain.model.CouponResponse;
 import com.example.coupon.domain.model.Item;
 import com.example.coupon.domain.model.Result;
+import com.example.coupon.domain.service.CouponService;
 import com.example.coupon.domain.service.strategy.CouponSolverStrategy;
 
 @Service
