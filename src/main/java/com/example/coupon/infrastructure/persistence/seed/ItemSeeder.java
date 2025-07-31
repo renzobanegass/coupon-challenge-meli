@@ -48,7 +48,7 @@ public class ItemSeeder {
             logger.info("Inserted batch up to index {}", index);
         }
 
-        logger.info("✅ Finished seeding {} items", TOTAL_ITEMS);
+        logger.info("Finished seeding {} items", TOTAL_ITEMS);
     }
 
     private String generateMercadoLibreId(int i) {

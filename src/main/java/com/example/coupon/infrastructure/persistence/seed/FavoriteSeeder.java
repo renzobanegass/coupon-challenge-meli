@@ -54,6 +54,6 @@ public class FavoriteSeeder {
         }
 
         favoriteRepository.saveAll(favorites);
-        System.out.printf("✅ Seeded %d favorites%n", favorites.size());
+        System.out.printf("Seeded %d favorites%n", favorites.size());
     }
 }
