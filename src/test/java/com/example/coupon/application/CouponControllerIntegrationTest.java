@@ -8,6 +8,8 @@ import com.example.coupon.infrastructure.persistence.repository.FavoriteReposito
 import com.example.coupon.infrastructure.persistence.repository.ItemRepository;
 import com.example.coupon.infrastructure.persistence.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +40,19 @@ class CouponControllerIntegrationTest {
 
     @Autowired 
     private UserRepository userRepository;
+
     @Autowired 
     private ItemRepository itemRepository;
+
     @Autowired 
     private FavoriteRepository favoriteRepository;
+
+    @AfterEach
+    void cleanUp() {
+        favoriteRepository.deleteAll();
+        itemRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @Test
     void returnsValidResponseWithDynamicAlgorithm() throws Exception {
@@ -227,5 +238,134 @@ class CouponControllerIntegrationTest {
                 .param("page", "-1")
                 .param("size", "-10"))
             .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void returnsTop5MostFavoritedItemsInOrder() throws Exception {
+        UserEntity user = new UserEntity();
+        user.setNickname("RankingUser");
+        user = userRepository.save(user);
+
+        for (int i = 0; i < 10; i++) {
+            ItemEntity item = new ItemEntity();
+            item.setId(UUID.randomUUID().toString());
+            item.setTitle("Item " + i);
+            item.setPrice(BigDecimal.TEN);
+            item.setThumbnail("http://img/" + i);
+            item = itemRepository.save(item);
+
+            int favoriteCount = 10 - i;
+            for (int j = 0; j < favoriteCount; j++) {
+                UserEntity u = new UserEntity();
+                u.setNickname("U" + i + "_" + j);
+                u = userRepository.save(u);
+                FavoriteEntity favorite = new FavoriteEntity();
+                favorite.setUser(u);
+                favorite.setItem(item);
+                favoriteRepository.save(favorite);
+            }
+        }
+
+        mockMvc.perform(get("/coupon/stats"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.length()").value(5))
+            .andExpect(jsonPath("$[0].title").value("Item 0"))
+            .andExpect(jsonPath("$[1].title").value("Item 1"))
+            .andExpect(jsonPath("$[4].title").value("Item 4"));
+    }
+
+    @Test
+    void handlesTieInFavoriteCountDeterministically() throws Exception {
+        ItemEntity itemA = new ItemEntity();
+        itemA.setId(UUID.randomUUID().toString());
+        itemA.setTitle("Item A");
+        itemA.setPrice(BigDecimal.TEN);
+        itemA.setThumbnail("thumbA");
+        itemA = itemRepository.save(itemA);
+
+        ItemEntity itemB = new ItemEntity();
+        itemB.setId(UUID.randomUUID().toString());
+        itemB.setTitle("Item B");
+        itemB.setPrice(BigDecimal.TEN);
+        itemB.setThumbnail("thumbB");
+        itemB = itemRepository.save(itemB);
+
+        for (int i = 0; i < 5; i++) {
+            UserEntity u = new UserEntity();
+            u.setNickname("TieUser" + i);
+            u = userRepository.save(u);
+            FavoriteEntity favoriteA = new FavoriteEntity();
+            favoriteA.setUser(u);
+            favoriteA.setItem(itemA);
+            FavoriteEntity favoriteB = new FavoriteEntity();
+            favoriteB.setUser(u);
+            favoriteB.setItem(itemB);
+            
+            favoriteRepository.save(favoriteA);
+            favoriteRepository.save(favoriteB);
+        }
+
+        mockMvc.perform(get("/coupon/stats"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.length()").value(2))
+            .andExpect(jsonPath("$[*].title").value(org.hamcrest.Matchers.containsInAnyOrder("Item A", "Item B")));
+    }
+
+    @Test
+    void returnsEmptyListWhenNoFavoritesExist() throws Exception {
+        mockMvc.perform(get("/coupon/stats"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
+    void returnsAnyFiveWhenAllItemsHaveSameFavoriteCount() throws Exception {
+        for (int i = 0; i < 10; i++) {
+            ItemEntity item = new ItemEntity();
+            item.setId(UUID.randomUUID().toString());
+            item.setTitle("EqualItem " + i);
+            item.setPrice(BigDecimal.ONE);
+            item.setThumbnail("thumb" + i);
+            item = itemRepository.save(item);
+
+            UserEntity user = new UserEntity();
+            user.setNickname("User" + i);
+            user = userRepository.save(user);
+
+            FavoriteEntity favorite = new FavoriteEntity();
+            favorite.setUser(user);
+            favorite.setItem(item);
+            favoriteRepository.save(favorite);
+        }
+
+        mockMvc.perform(get("/coupon/stats"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.length()").value(5));
+    }
+
+    @Test
+    void ignoresItemsWithNoFavorites() throws Exception {
+        for (int i = 0; i < 7; i++) {
+            ItemEntity item = new ItemEntity();
+            item.setId(UUID.randomUUID().toString());
+            item.setTitle("Item " + i);
+            item.setPrice(BigDecimal.TEN);
+            item.setThumbnail("thumb" + i);
+            item = itemRepository.save(item);
+
+            if (i < 3) {
+                UserEntity user = new UserEntity();
+                user.setNickname("U" + i);
+                user = userRepository.save(user);
+                FavoriteEntity favorite = new FavoriteEntity();
+                favorite.setUser(user);
+                favorite.setItem(item);
+                favoriteRepository.save(favorite);
+            }
+        }
+
+        mockMvc.perform(get("/coupon/stats"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.length()").value(3));
     }
 }

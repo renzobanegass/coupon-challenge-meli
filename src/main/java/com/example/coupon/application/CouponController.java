@@ -1,5 +1,7 @@
 package com.example.coupon.application;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.coupon.application.dto.ItemDto;
+import com.example.coupon.application.dto.TopFavoriteItemDto;
 import com.example.coupon.domain.model.CouponRequest;
 import com.example.coupon.domain.model.CouponResponse;
 import com.example.coupon.domain.service.CouponService;
@@ -19,7 +22,11 @@ import com.example.coupon.domain.service.UserFavoritesService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
@@ -92,5 +99,18 @@ public class CouponController {
         ) int size
     ) {
         return userFavoritesService.getFavoritesForUser(userId, PageRequest.of(page, size));
+    }
+
+    @Operation(
+    summary = "Get top 5 most favorited items",
+    description = "Returns a list of the top 5 items with the most favorites, ordered by popularity descending."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successful retrieval of item rankings",
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = TopFavoriteItemDto.class)))),
+    })
+    @GetMapping("/stats")
+    public ResponseEntity<List<TopFavoriteItemDto>> getTopFavorites() {
+        return ResponseEntity.ok(userFavoritesService.getTopFavoriteItems(PageRequest.of(0, 5)));
     }
 }
