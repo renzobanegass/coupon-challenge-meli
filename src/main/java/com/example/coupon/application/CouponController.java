@@ -22,7 +22,11 @@ import com.example.coupon.domain.service.UserFavoritesService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
@@ -97,7 +101,14 @@ public class CouponController {
         return userFavoritesService.getFavoritesForUser(userId, PageRequest.of(page, size));
     }
 
-    @Operation(summary = "Top 5 favorite items", description = "Returns the 5 most favorited items")
+    @Operation(
+    summary = "Get top 5 most favorited items",
+    description = "Returns a list of the top 5 items with the most favorites, ordered by popularity descending."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successful retrieval of item rankings",
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = TopFavoriteItemDto.class)))),
+    })
     @GetMapping("/stats")
     public ResponseEntity<List<TopFavoriteItemDto>> getTopFavorites() {
         return ResponseEntity.ok(userFavoritesService.getTopFavoriteItems(PageRequest.of(0, 5)));
