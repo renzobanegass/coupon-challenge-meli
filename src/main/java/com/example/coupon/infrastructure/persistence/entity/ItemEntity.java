@@ -1,6 +1,8 @@
 package com.example.coupon.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -14,7 +16,7 @@ public class ItemEntity {
 
     private String thumbnail;
 
-    private double price;
+    private BigDecimal price;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<FavoriteEntity> favorites;
@@ -31,9 +33,9 @@ public class ItemEntity {
 
     public void setThumbnail(String thumbnail) { this.thumbnail = thumbnail; }
 
-    public double getPrice() { return price; }
+    public BigDecimal getPrice() { return price; }
 
-    public void setPrice(double price) { this.price = price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
 
     public List<FavoriteEntity> getFavorites() { return favorites; }
 
