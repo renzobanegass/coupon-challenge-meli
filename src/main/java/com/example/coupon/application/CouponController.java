@@ -1,5 +1,7 @@
 package com.example.coupon.application;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.coupon.application.dto.ItemDto;
+import com.example.coupon.application.dto.TopFavoriteItemDto;
 import com.example.coupon.domain.model.CouponRequest;
 import com.example.coupon.domain.model.CouponResponse;
 import com.example.coupon.domain.service.CouponService;
@@ -92,5 +95,11 @@ public class CouponController {
         ) int size
     ) {
         return userFavoritesService.getFavoritesForUser(userId, PageRequest.of(page, size));
+    }
+
+    @Operation(summary = "Top 5 favorite items", description = "Returns the 5 most favorited items")
+    @GetMapping("/stats")
+    public ResponseEntity<List<TopFavoriteItemDto>> getTopFavorites() {
+        return ResponseEntity.ok(userFavoritesService.getTopFavoriteItems(PageRequest.of(0, 5)));
     }
 }
