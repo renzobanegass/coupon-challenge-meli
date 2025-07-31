@@ -1,0 +1,11 @@
+# Build artifacts
+build/
+.gradle/
+
+# IDE
+*.iml
+.idea/
+
+# App configuration
+src/main/resources/application.properties
+src/test/resources/application-test.properties

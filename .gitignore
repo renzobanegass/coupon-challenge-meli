@@ -37,3 +37,6 @@ out/
 .vscode/
 
 .fake
+# Ignore app configs
+src/test/resources/application-test.properties
+.env
