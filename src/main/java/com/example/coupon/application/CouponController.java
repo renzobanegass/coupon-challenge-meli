@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.coupon.application.dto.ItemDto;
 import com.example.coupon.application.dto.TopFavoriteItemDto;
 import com.example.coupon.domain.model.CouponRequest;
-import com.example.coupon.domain.model.Algorithm;
 import com.example.coupon.domain.model.CouponResponse;
 import com.example.coupon.domain.service.CouponService;
 import com.example.coupon.domain.service.UserFavoritesService;
@@ -62,13 +61,12 @@ public class CouponController {
         @Valid @RequestBody CouponRequest request,
 
         @Parameter(
-            description = "Algorithm to use for optimization. Options: 'DP' (dynamic programming), 'GREEDY'. Defaults to 'DP'.",
-            example = "DP"
+            description = "Algorithm to use for optimization. Options: 'dp' (dynamic programming), 'greedy'. Defaults to 'dp'.",
+            example = "dp"
         )
-        @RequestParam(defaultValue = "DP") Algorithm algo
+        @RequestParam(defaultValue = "dp") String algo
     ) {
-        // Convert enum to the lowercase string the service layer might be expecting
-        CouponResponse response = couponService.calculateCoupon(request, algo.name().toLowerCase());
+        CouponResponse response = couponService.calculateCoupon(request, algo);
         return ResponseEntity.ok(response);
     }
 

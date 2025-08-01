@@ -2,7 +2,6 @@ package com.example.coupon.application;
 
 import com.example.coupon.domain.model.*;
 import com.example.coupon.domain.service.strategy.CouponSolverStrategy;
-import com.example.coupon.infrastructure.external.MeliItemInfoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,19 +17,18 @@ public class CouponServiceImplTest {
 
     private CouponSolverStrategy greedyStrategy;
     private CouponSolverStrategy dynamicStrategy;
-    private MeliItemInfoService meliItemInfoService;
     private CouponServiceImpl couponService;
 
     @BeforeEach
     void setUp() {
         greedyStrategy = mock(CouponSolverStrategy.class);
         dynamicStrategy = mock(CouponSolverStrategy.class);
-        meliItemInfoService = mock(MeliItemInfoService.class);
 
         when(greedyStrategy.name()).thenReturn("greedy");
         when(dynamicStrategy.name()).thenReturn("dynamic");
 
-        couponService = new CouponServiceImpl(List.of(greedyStrategy, dynamicStrategy), meliItemInfoService);
+        // simulate Spring injecting both strategies
+        couponService = new CouponServiceImpl(List.of(greedyStrategy, dynamicStrategy));
     }
 
     @Test

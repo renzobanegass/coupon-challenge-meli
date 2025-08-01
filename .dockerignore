@@ -1,14 +1,11 @@
-# Docker
-docker-compose.override.yml
+# Build artifacts
+build/
+.gradle/
 
-# Gradle
-.gradle
-build
-
-# IDE files
-.idea
-.vscode
+# IDE
 *.iml
+.idea/
 
-# Secrets
-.env
+# App configuration
+src/main/resources/application.properties
+src/test/resources/application-test.properties

@@ -1,20 +1,21 @@
 package com.example.coupon.infrastructure.persistence.seed;
 
-import com.example.coupon.AbstractIntegrationTest;
 import com.example.coupon.infrastructure.persistence.entity.FavoriteEntity;
 import com.example.coupon.infrastructure.persistence.repository.FavoriteRepository;
 import com.example.coupon.infrastructure.persistence.repository.ItemRepository;
 import com.example.coupon.infrastructure.persistence.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
+@SpringBootTest
 @ActiveProfiles("test")
-class SeederIntegrationTest extends AbstractIntegrationTest {
+class SeederIntegrationTest {
 
     @Autowired private UserSeeder userSeeder;
     @Autowired private ItemSeeder itemSeeder;

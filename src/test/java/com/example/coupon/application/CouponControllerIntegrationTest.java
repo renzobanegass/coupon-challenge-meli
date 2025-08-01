@@ -1,6 +1,5 @@
 package com.example.coupon.application;
 
-import com.example.coupon.AbstractIntegrationTest;
 import com.example.coupon.domain.model.CouponRequest;
 import com.example.coupon.infrastructure.persistence.entity.FavoriteEntity;
 import com.example.coupon.infrastructure.persistence.entity.ItemEntity;
@@ -16,14 +15,12 @@ import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -33,10 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-class CouponControllerIntegrationTest extends AbstractIntegrationTest {
-
-    @org.springframework.boot.test.mock.mockito.MockBean
-    private com.example.coupon.infrastructure.external.MeliItemInfoService meliItemInfoService;
+class CouponControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -62,59 +56,9 @@ class CouponControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void returnsValidResponseWithDynamicAlgorithm() throws Exception {
-        // Seed items in DB
-        ItemEntity itemA = new ItemEntity();
-        itemA.setId("A");
-        itemA.setTitle("Item A");
-        itemA.setPrice(new BigDecimal("10.00"));
-        itemA.setThumbnail("thumbA");
-        itemRepository.save(itemA);
-        ItemEntity itemB = new ItemEntity();
-        itemB.setId("B");
-        itemB.setTitle("Item B");
-        itemB.setPrice(new BigDecimal("10.00"));
-        itemB.setThumbnail("thumbB");
-        itemRepository.save(itemB);
-        ItemEntity itemC = new ItemEntity();
-        itemC.setId("C");
-        itemC.setTitle("Item C");
-        itemC.setPrice(new BigDecimal("10.00"));
-        itemC.setThumbnail("thumbC");
-        itemRepository.save(itemC);
-        // Mock HTTP client to return valid info
-        List<Map<String, Object>> apiResponse = List.of(
-            Map.of(
-                "id", "A",
-                "title", "Item A",
-                "price", new BigDecimal("10.00"),
-                "thumbnail", "thumbA"
-            ),
-            Map.of(
-                "id", "B",
-                "title", "Item B",
-                "price", new BigDecimal("10.00"),
-                "thumbnail", "thumbB"
-            ),
-            Map.of(
-                "id", "C",
-                "title", "Item C",
-                "price", new BigDecimal("10.00"),
-                "thumbnail", "thumbC"
-            )
-        );
-        org.mockito.Mockito.when(meliItemInfoService.getItemsInfo(org.mockito.ArgumentMatchers.anyList())).thenReturn(apiResponse);
         CouponRequest request = new CouponRequest(List.of("A", "B", "C"), new BigDecimal("30.00"));
 
-        var result = mockMvc.perform(post("/coupon?algo=DP")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isOk())
-            .andReturn();
-
-        String responseBody = result.getResponse().getContentAsString();
-        System.out.println("DEBUG: /coupon?algo=DP response: " + responseBody);
-
-        mockMvc.perform(post("/coupon?algo=DP")
+        mockMvc.perform(post("/coupon?algo=dp")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
@@ -125,48 +69,9 @@ class CouponControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void returnsValidResponseWithGreedyAlgorithm() throws Exception {
-        ItemEntity itemA = new ItemEntity();
-        itemA.setId("A");
-        itemA.setTitle("Item A");
-        itemA.setPrice(new BigDecimal("10.00"));
-        itemA.setThumbnail("thumbA");
-        itemRepository.save(itemA);
-        ItemEntity itemB = new ItemEntity();
-        itemB.setId("B");
-        itemB.setTitle("Item B");
-        itemB.setPrice(new BigDecimal("10.00"));
-        itemB.setThumbnail("thumbB");
-        itemRepository.save(itemB);
-        ItemEntity itemC = new ItemEntity();
-        itemC.setId("C");
-        itemC.setTitle("Item C");
-        itemC.setPrice(new BigDecimal("10.00"));
-        itemC.setThumbnail("thumbC");
-        itemRepository.save(itemC);
-        List<Map<String, Object>> apiResponse = List.of(
-            Map.of(
-                "id", "A",
-                "title", "Item A",
-                "price", new BigDecimal("10.00"),
-                "thumbnail", "thumbA"
-            ),
-            Map.of(
-                "id", "B",
-                "title", "Item B",
-                "price", new BigDecimal("10.00"),
-                "thumbnail", "thumbB"
-            ),
-            Map.of(
-                "id", "C",
-                "title", "Item C",
-                "price", new BigDecimal("10.00"),
-                "thumbnail", "thumbC"
-            )
-        );
-        org.mockito.Mockito.when(meliItemInfoService.getItemsInfo(org.mockito.ArgumentMatchers.anyList())).thenReturn(apiResponse);
         CouponRequest request = new CouponRequest(List.of("A", "B", "C"), new BigDecimal("20.00"));
 
-        mockMvc.perform(post("/coupon?algo=GREEDY")
+        mockMvc.perform(post("/coupon?algo=greedy")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
@@ -198,45 +103,6 @@ class CouponControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void defaultsToDynamicAlgorithmWhenAlgoIsMissing() throws Exception {
-        ItemEntity itemA = new ItemEntity();
-        itemA.setId("A");
-        itemA.setTitle("Item A");
-        itemA.setPrice(new BigDecimal("10.00"));
-        itemA.setThumbnail("thumbA");
-        itemRepository.save(itemA);
-        ItemEntity itemB = new ItemEntity();
-        itemB.setId("B");
-        itemB.setTitle("Item B");
-        itemB.setPrice(new BigDecimal("10.00"));
-        itemB.setThumbnail("thumbB");
-        itemRepository.save(itemB);
-        ItemEntity itemC = new ItemEntity();
-        itemC.setId("C");
-        itemC.setTitle("Item C");
-        itemC.setPrice(new BigDecimal("10.00"));
-        itemC.setThumbnail("thumbC");
-        itemRepository.save(itemC);
-        List<Map<String, Object>> apiResponse = List.of(
-            Map.of(
-                "id", "A",
-                "title", "Item A",
-                "price", new BigDecimal("10.00"),
-                "thumbnail", "thumbA"
-            ),
-            Map.of(
-                "id", "B",
-                "title", "Item B",
-                "price", new BigDecimal("10.00"),
-                "thumbnail", "thumbB"
-            ),
-            Map.of(
-                "id", "C",
-                "title", "Item C",
-                "price", new BigDecimal("10.00"),
-                "thumbnail", "thumbC"
-            )
-        );
-        org.mockito.Mockito.when(meliItemInfoService.getItemsInfo(org.mockito.ArgumentMatchers.anyList())).thenReturn(apiResponse);
         CouponRequest request = new CouponRequest(List.of("A", "B", "C"), new BigDecimal("30.00"));
 
         mockMvc.perform(post("/coupon")
@@ -254,7 +120,7 @@ class CouponControllerIntegrationTest extends AbstractIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
-            .andExpect(content().string(org.hamcrest.Matchers.containsString("No enum constant com.example.coupon.domain.model.Algorithm.invalid")));
+            .andExpect(content().string("Invalid algorithm: invalid"));
     }
 
     @Test

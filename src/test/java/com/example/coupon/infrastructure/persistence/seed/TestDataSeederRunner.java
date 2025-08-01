@@ -3,11 +3,9 @@ package com.example.coupon.infrastructure.persistence.seed;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.example.coupon.AbstractIntegrationTest;
-
 @Component
 @Profile("test")
-public class TestDataSeederRunner extends AbstractIntegrationTest  {
+public class TestDataSeederRunner {
 
     private final UserSeeder userSeeder;
     private final ItemSeeder itemSeeder;

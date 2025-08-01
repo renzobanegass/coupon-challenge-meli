@@ -1,3 +1,5 @@
+version : '3.8'
+
 services:
   db:
     image: postgres:15
@@ -12,20 +14,17 @@ services:
     volumes:
       - ./postgres/init:/docker-entrypoint-initdb.d
       - db_data:/var/lib/postgresql/data
-  app:
+    app:
       build: .
       ports:
-        - "8083:8080"
+        - "8080:8080"
       environment:
-        - MERCADOLIBRE_CLIENT_ID=${MERCADOLIBRE_CLIENT_ID}
-        - MERCADOLIBRE_CLIENT_SECRET=${MERCADOLIBRE_CLIENT_SECRET}
         - DB_URL=jdbc:postgresql://db:5432/coupon_db
         - DB_USERNAME=postgres
         - DB_PASSWORD=postgres
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
       depends_on:
-        - db  
+        - db
+  
 
 volumes:
   db_data:

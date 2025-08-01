@@ -39,9 +39,4 @@ out/
 .fake
 # Ignore app configs
 src/test/resources/application-test.properties
-
-# Secrets and environment variables
 .env
-
-# Docker
-docker-compose.override.yml
