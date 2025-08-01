@@ -27,7 +27,7 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public CouponResponse calculateCoupon(CouponRequest request, String algorithm) {
         // resolve items (for now fake, real API in simulation phase)
-        List<Item> items = request.item_ids().stream()
+        List<Item> items = request.itemIds().stream()
                 .map(id -> new Item(id, BigDecimal.TEN)) // placeholder price
                 .toList();
 

@@ -1,5 +1,6 @@
 package com.example.coupon.application;
 
+import com.example.coupon.AbstractIntegrationTest;
 import com.example.coupon.domain.model.CouponRequest;
 import com.example.coupon.infrastructure.persistence.entity.FavoriteEntity;
 import com.example.coupon.infrastructure.persistence.entity.ItemEntity;
@@ -30,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-class CouponControllerIntegrationTest {
+class CouponControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -58,7 +59,7 @@ class CouponControllerIntegrationTest {
     void returnsValidResponseWithDynamicAlgorithm() throws Exception {
         CouponRequest request = new CouponRequest(List.of("A", "B", "C"), new BigDecimal("30.00"));
 
-        mockMvc.perform(post("/coupon?algo=dp")
+        mockMvc.perform(post("/coupon?algo=DP")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
@@ -71,7 +72,7 @@ class CouponControllerIntegrationTest {
     void returnsValidResponseWithGreedyAlgorithm() throws Exception {
         CouponRequest request = new CouponRequest(List.of("A", "B", "C"), new BigDecimal("20.00"));
 
-        mockMvc.perform(post("/coupon?algo=greedy")
+        mockMvc.perform(post("/coupon?algo=GREEDY")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
@@ -120,7 +121,7 @@ class CouponControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
-            .andExpect(content().string("Invalid algorithm: invalid"));
+            .andExpect(content().string(org.hamcrest.Matchers.containsString("No enum constant com.example.coupon.domain.model.Algorithm.invalid")));
     }
 
     @Test
