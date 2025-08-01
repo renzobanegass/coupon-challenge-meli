@@ -10,8 +10,8 @@ import jakarta.validation.constraints.NotNull;
 
 public record CouponRequest(
     @Schema(description = "List of item IDs to consider")
-    @NotEmpty(message = "item_ids must not be empty")
-    List<String> item_ids,
+    @NotEmpty(message = "itemIds must not be empty")
+    List<String> itemIds,
 
     @Schema(description = "Total amount of the coupon")
     @NotNull(message = "amount is required")
