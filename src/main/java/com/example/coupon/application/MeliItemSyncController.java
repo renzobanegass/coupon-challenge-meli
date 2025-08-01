@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MeliItemSyncController {
     private final MeliItemSyncService meliItemSyncService;
 
-    @Value("${ADMIN_SYNC_SECRET}")
+    @Value("${ADMIN_SYNC_SECRET:test-secret}")
     private String adminSecret;
 
     public MeliItemSyncController(MeliItemSyncService meliItemSyncService) {

@@ -22,7 +22,7 @@ public class MeliTokenEntity {
     @Column(name = "refresh_token", nullable = false)
     private String refreshToken;
 
-    @Column(name = "expires_at", nullable = false)
+    @Column(name = "expires_in", nullable = false)
     private LocalDateTime expiresAt;
 
     public Long getId() { return id; }

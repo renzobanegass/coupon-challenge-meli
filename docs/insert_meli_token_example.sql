@@ -3,7 +3,7 @@
 -- Replace the quoted values with those obtained from the OAuth flow
 -- Run this script in your database before starting the app for the first time
 
-INSERT INTO meli_token (access_token, refresh_token, expires_at)
+INSERT INTO meli_token (access_token, refresh_token, expires_in)
 VALUES (
   'YOUR_ACCESS_TOKEN_HERE',
   'YOUR_REFRESH_TOKEN_HERE',

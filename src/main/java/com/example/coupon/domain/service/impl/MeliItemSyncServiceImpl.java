@@ -20,7 +20,7 @@ public class MeliItemSyncServiceImpl implements MeliItemSyncService {
     private final ItemRepository itemRepository;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    @Value("${MERCADOLIBRE_USER_ID}")
+    @Value("${MERCADOLIBRE_USER_ID:test-user}")
     private String userId;
 
     public MeliItemSyncServiceImpl(MeliTokenAdapter meliTokenAdapter, ItemRepository itemRepository) {
